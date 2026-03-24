@@ -5,6 +5,7 @@ import static deltazero.amarok.utils.AppInfoUtil.AppInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,9 +25,14 @@ public class AppListAdapter extends ListAdapter<AppInfo, AppListAdapter.AppListH
         void onAppToggled(AppInfo app);
     }
 
-    private final OnAppToggleListener listener;
+    public interface OnAppConfigListener {
+        void onAppConfigClicked(AppInfo app, int position);
+    }
 
-    public AppListAdapter(OnAppToggleListener listener) {
+    private final OnAppToggleListener toggleListener;
+    private final OnAppConfigListener configListener;
+
+    public AppListAdapter(OnAppToggleListener toggleListener, OnAppConfigListener configListener) {
         super(new DiffUtil.ItemCallback<>() {
             @Override
             public boolean areItemsTheSame(@NonNull AppInfo oldItem, @NonNull AppInfo newItem) {
@@ -38,7 +44,8 @@ public class AppListAdapter extends ListAdapter<AppInfo, AppListAdapter.AppListH
                 return oldItem.packageName().equals(newItem.packageName()) && oldItem.label().equals(newItem.label());
             }
         });
-        this.listener = listener;
+        this.toggleListener = toggleListener;
+        this.configListener = configListener;
     }
 
     @NonNull
@@ -51,7 +58,7 @@ public class AppListAdapter extends ListAdapter<AppInfo, AppListAdapter.AppListH
     @Override
     public void onBindViewHolder(@NonNull AppListHolder holder, int position) {
         AppInfo app = getCurrentList().get(position);
-        holder.bind(app, listener);
+        holder.bind(app, toggleListener, configListener);
     }
 
     public static class AppListHolder extends RecyclerView.ViewHolder {
@@ -59,6 +66,7 @@ public class AppListAdapter extends ListAdapter<AppInfo, AppListAdapter.AppListH
         private final TextView tvPkgName;
         private final MaterialCheckBox cbIsHidden;
         private final ImageView ivAppIcon;
+        private final ImageButton btnConfig;
         private AppInfo currentApp;
 
         AppListHolder(View view) {
@@ -67,18 +75,30 @@ public class AppListAdapter extends ListAdapter<AppInfo, AppListAdapter.AppListH
             tvPkgName = view.findViewById(R.id.hideapp_tv_pkgname);
             cbIsHidden = view.findViewById(R.id.hideapp_cb_ishidden);
             ivAppIcon = view.findViewById(R.id.hideapp_iv_appicon);
+            btnConfig = view.findViewById(R.id.hideapp_btn_config);
         }
 
-        void bind(AppInfo app, OnAppToggleListener listener) {
+        void bind(AppInfo app, OnAppToggleListener toggleListener, OnAppConfigListener configListener) {
             currentApp = app;
             tvAppName.setText(app.label());
             tvPkgName.setText(app.packageName());
             ivAppIcon.setImageDrawable(app.icon());
-            cbIsHidden.setChecked(PrefMgr.getHideApps().contains(app.packageName()));
+
+            boolean isHidden = PrefMgr.getHideApps().contains(app.packageName());
+            cbIsHidden.setChecked(isHidden);
+            btnConfig.setVisibility(isHidden ? View.VISIBLE : View.GONE);
 
             cbIsHidden.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (currentApp != null && buttonView.isPressed()) {
-                    listener.onAppToggled(currentApp);
+                    toggleListener.onAppToggled(currentApp);
+                    btnConfig.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                }
+            });
+
+            btnConfig.setOnClickListener(v -> {
+                int pos = getBindingAdapterPosition();
+                if (pos != RecyclerView.NO_ID && currentApp != null) {
+                    configListener.onAppConfigClicked(currentApp, pos);
                 }
             });
         }

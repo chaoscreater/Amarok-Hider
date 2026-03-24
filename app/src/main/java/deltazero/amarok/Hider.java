@@ -3,11 +3,15 @@ package deltazero.amarok;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -85,6 +89,25 @@ public final class Hider {
             Log.i(TAG, "Process 'hide' start.");
             state.postValue(State.PROCESSING);
 
+            // Record which apps were disabled before hiding, for "keep previous status" feature
+            Set<String> keepPreviousStatusApps = PrefMgr.getKeepPreviousStatusApps();
+            if (!keepPreviousStatusApps.isEmpty()) {
+                Set<String> previouslyDisabled = new HashSet<>();
+                for (String pkgName : keepPreviousStatusApps) {
+                    try {
+                        int enabledState = context.getPackageManager().getApplicationEnabledSetting(pkgName);
+                        if (enabledState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
+                                || enabledState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                                || enabledState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
+                            previouslyDisabled.add(pkgName);
+                        }
+                    } catch (Exception e) {
+                        Log.w(TAG, "Could not get enabled state for " + pkgName + ": " + e);
+                    }
+                }
+                PrefMgr.setPreviouslyDisabledApps(previouslyDisabled);
+            }
+
             try {
                 // Determine if we should only disable apps (skip hide step) when XHide is enabled
                 boolean disableOnly = PrefMgr.isXHideEnabled() && PrefMgr.getDisableOnlyWithXHide();
@@ -128,7 +151,15 @@ public final class Hider {
             state.postValue(State.PROCESSING);
 
             try {
-                PrefMgr.getAppHider(context).unhide(PrefMgr.getHideApps());
+                Set<String> appsToUnhide = PrefMgr.getHideApps();
+                appsToUnhide.removeAll(PrefMgr.getKeepDisabledApps());
+
+                // Also keep disabled apps that have "keep previous status" and were disabled before hiding
+                Set<String> prevStatusApps = PrefMgr.getKeepPreviousStatusApps();
+                prevStatusApps.retainAll(PrefMgr.getPreviouslyDisabledApps());
+                appsToUnhide.removeAll(prevStatusApps);
+
+                PrefMgr.getAppHider(context).unhide(appsToUnhide);
                 PrefMgr.getFileHider(context).unhide(PrefMgr.getHideFilePath());
             } catch (InterruptedException e) {
                 Log.w(TAG, "Process 'unhide' interrupted.");

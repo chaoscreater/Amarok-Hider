@@ -85,6 +85,26 @@ public class AppListViewModel extends AndroidViewModel {
         PrefMgr.setHideApps(hiddenApps);
     }
 
+    public void toggleAppKeepDisabled(AppInfo app) {
+        Set<String> keepDisabled = PrefMgr.getKeepDisabledApps();
+        if (keepDisabled.contains(app.packageName())) {
+            keepDisabled.remove(app.packageName());
+        } else {
+            keepDisabled.add(app.packageName());
+        }
+        PrefMgr.setKeepDisabledApps(keepDisabled);
+    }
+
+    public void toggleAppKeepPreviousStatus(AppInfo app) {
+        Set<String> keepPreviousStatus = PrefMgr.getKeepPreviousStatusApps();
+        if (keepPreviousStatus.contains(app.packageName())) {
+            keepPreviousStatus.remove(app.packageName());
+        } else {
+            keepPreviousStatus.add(app.packageName());
+        }
+        PrefMgr.setKeepPreviousStatusApps(keepPreviousStatus);
+    }
+
     private void updateAppList() {
         executor.execute(() -> {
             String query = searchQuery.getValue();

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(cmd.exe /c \"gradlew.bat assembleFossDebug 2>&1\")",
+      "Bash(\"D:/test/Amarok-Hider/gradlew.bat\" assembleFossDebug)",
+      "Bash(findstr:*)"
+    ]
+  }
+}

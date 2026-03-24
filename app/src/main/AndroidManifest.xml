@@ -88,6 +88,9 @@
             android:name=".ui.SetHideAppActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.BackupActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.CalendarActivity"
             android:exported="false"
             android:theme="@style/Theme.Calculator" />

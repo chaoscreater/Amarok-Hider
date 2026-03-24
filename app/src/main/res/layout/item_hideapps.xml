@@ -14,13 +14,27 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp" />
 
+    <ImageButton
+        android:id="@+id/hideapp_btn_config"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_toStartOf="@id/hideapp_cb_ishidden"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/app_settings"
+        android:padding="6dp"
+        android:src="@drawable/ic_settings"
+        android:visibility="gone"
+        app:tint="?attr/colorOnSurfaceVariant" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@id/hideapp_cb_ishidden"
+        android:layout_toStartOf="@id/hideapp_btn_config"
         android:layout_toEndOf="@id/hideapp_iv_appicon"
         android:orientation="vertical">
 

@@ -78,6 +78,9 @@ public final class PrefMgr {
     public static final String PANIC_BUTTON_Y = "panicButtonY";
     public static final String PANIC_BUTTON_LEFT_EDGE = "panicButtonLeftEdge";
     public static final String DARK_THEME = "darkTheme";
+    public static final String KEEP_DISABLED_APPS = "keepDisabledApps";
+    public static final String KEEP_PREVIOUS_STATUS_APPS = "keepPreviousStatusApps";
+    public static final String PREVIOUSLY_DISABLED_APPS = "previouslyDisabledApps";
 
     public static Set<String> getHideFilePath() {
         // Return a defensive copy to avoid SharedPreferences caching issues
@@ -109,6 +112,33 @@ public final class PrefMgr {
 
     public static void setHideApps(Set<String> pkgNames) {
         mPrefEditor.putStringSet(HIDE_PKG_NAMES, pkgNames);
+        mPrefEditor.apply();
+    }
+
+    public static Set<String> getKeepDisabledApps() {
+        return new HashSet<>(mPrefs.getStringSet(KEEP_DISABLED_APPS, new HashSet<>()));
+    }
+
+    public static void setKeepDisabledApps(Set<String> pkgNames) {
+        mPrefEditor.putStringSet(KEEP_DISABLED_APPS, pkgNames);
+        mPrefEditor.apply();
+    }
+
+    public static Set<String> getKeepPreviousStatusApps() {
+        return new HashSet<>(mPrefs.getStringSet(KEEP_PREVIOUS_STATUS_APPS, new HashSet<>()));
+    }
+
+    public static void setKeepPreviousStatusApps(Set<String> pkgNames) {
+        mPrefEditor.putStringSet(KEEP_PREVIOUS_STATUS_APPS, pkgNames);
+        mPrefEditor.apply();
+    }
+
+    public static Set<String> getPreviouslyDisabledApps() {
+        return new HashSet<>(mPrefs.getStringSet(PREVIOUSLY_DISABLED_APPS, new HashSet<>()));
+    }
+
+    public static void setPreviouslyDisabledApps(Set<String> pkgNames) {
+        mPrefEditor.putStringSet(PREVIOUSLY_DISABLED_APPS, pkgNames);
         mPrefEditor.apply();
     }
 

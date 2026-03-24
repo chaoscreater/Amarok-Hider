@@ -215,4 +215,21 @@
     <string name="hide_from_recents_description">Hide Amarok from the recent apps screen.</string>
     <string name="hide_amarok_icon_dialog_title">Hide Amarok Icon</string>
     <string name="hide_amarok_icon_dialog_message">This option will hide Amarok from the launcher. You can dial *#*#262765#*#*  (262765 spells \"amarok\" on T9 keypad) to access Amarok again.</string>
+    <string name="backup_restore">Backup &amp; Restore</string>
+    <string name="backup_restore_description">Export or import hidden apps and files list.</string>
+    <string name="export_config">Export config</string>
+    <string name="export_config_description">Save hidden apps and files list to a JSON file.</string>
+    <string name="import_config">Import config</string>
+    <string name="import_config_description">Load hidden apps and files list from a JSON file.</string>
+    <string name="export_success">Config exported successfully.</string>
+    <string name="export_failed">Failed to export config.</string>
+    <string name="import_success">Config imported successfully.</string>
+    <string name="import_failed">Failed to import config. Is the file valid?</string>
+    <string name="import_confirm_title">Import config?</string>
+    <string name="import_confirm_message">This will replace your current hidden apps and files list. Continue?</string>
+    <string name="keep_disabled_on_unhide">Keep disabled when unhiding</string>
+    <string name="keep_disabled_on_unhide_description">This app will remain disabled even after unhiding, regardless of its previous state.</string>
+    <string name="keep_previous_status_on_unhide">Keep previous enable/disable status</string>
+    <string name="keep_previous_status_on_unhide_description">Records whether this app was enabled or disabled before hiding. After unhiding, its previous state will be restored.</string>
+    <string name="app_settings">App settings</string>
 </resources>

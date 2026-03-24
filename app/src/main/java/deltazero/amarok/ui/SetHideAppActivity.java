@@ -1,10 +1,13 @@
 package deltazero.amarok.ui;
 
+import static deltazero.amarok.utils.AppInfoUtil.AppInfo;
+
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -16,8 +19,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.materialswitch.MaterialSwitch;
 
 import deltazero.amarok.AmarokActivity;
+import deltazero.amarok.PrefMgr;
 import deltazero.amarok.R;
 
 public class SetHideAppActivity extends AmarokActivity {
@@ -58,7 +63,10 @@ public class SetHideAppActivity extends AmarokActivity {
     }
 
     private void setupRecyclerView() {
-        adapter = new AppListAdapter(app -> viewModel.toggleAppHidden(app));
+        adapter = new AppListAdapter(
+                app -> viewModel.toggleAppHidden(app),
+                this::showAppConfigDialog
+        );
         rvAppList.setAdapter(adapter);
         rvAppList.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -74,6 +82,39 @@ public class SetHideAppActivity extends AmarokActivity {
         });
 
         viewModel.isLoading().observe(this, isLoading -> srLayout.setRefreshing(isLoading));
+    }
+
+    private void showAppConfigDialog(AppInfo app, int position) {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_app_config, null);
+        MaterialSwitch swKeepDisabled = dialogView.findViewById(R.id.dialog_appconfig_sw_keepdisabled);
+        MaterialSwitch swKeepPreviousStatus = dialogView.findViewById(R.id.dialog_appconfig_sw_keeppreviousstatus);
+
+        boolean isKeepDisabled = PrefMgr.getKeepDisabledApps().contains(app.packageName());
+        boolean isKeepPreviousStatus = PrefMgr.getKeepPreviousStatusApps().contains(app.packageName());
+        swKeepDisabled.setChecked(isKeepDisabled);
+        swKeepPreviousStatus.setChecked(isKeepPreviousStatus);
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(app.label())
+                .setView(dialogView)
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    boolean newKeepDisabled = swKeepDisabled.isChecked();
+                    boolean newKeepPreviousStatus = swKeepPreviousStatus.isChecked();
+                    boolean changed = false;
+                    if (newKeepDisabled != isKeepDisabled) {
+                        viewModel.toggleAppKeepDisabled(app);
+                        changed = true;
+                    }
+                    if (newKeepPreviousStatus != isKeepPreviousStatus) {
+                        viewModel.toggleAppKeepPreviousStatus(app);
+                        changed = true;
+                    }
+                    if (changed) {
+                        adapter.notifyItemChanged(position);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     private void setupFilterMenu() {
