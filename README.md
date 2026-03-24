@@ -21,9 +21,14 @@
   All 3 apps will not show up in Play Store, no chance of accidentally updating them, great. Now, I'm done with using the Play Store, I can Unhide in Amarok. All 3 apps will now be unhidden (enabled). However, App A was previously disabled manually by me and I want to keep it that way. The original Amarok version cannot do this as of this writing. But with my version, you can restore the previous app enabled/disabled status.
 
 - Similar to point 2, you can configure on a per-app level to keep an app disabled (hidden) after you tap Unhide. This is great if you know that certain apps will always need to be hidden and that you want to manually enable/disable it. So for example, if I have an app that I rarely use (maybe once every month) and I just need to make sure it always stays disabled after I enable it temporarily with Amarok, then later on choose to manually enable it, then this is what you need.
-  
-   
 
+
+## Download link
+https://github.com/chaoscreater/Amarok-Hider/blob/main/Amarok-v0.10.1%2B64c1079-foss.apk
+   
+<br>
+<br>
+<br>
 
 ## What is Amarok?
 
