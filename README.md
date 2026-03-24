@@ -9,6 +9,22 @@
 
 🌐 **ENGLISH** | [简体中文](https://github.com/deltazefiro/Amarok-Hider/blob/main/README.zh.md)
 
+
+## What's new in my version?
+- For the apps that you've configured to hide, those can now be exported/imported
+
+- When you Hide or Unhide in Amarok, it will perform that operation for ALL the apps that you've configured. This isn't ideal, as you might want more granularity on a per-app level. There may be situations where an app needs to be hidden and remain hidden. Let's say I have an app that I don't use often, so I tend to keep it disabled (to avoid noisy notifications, or other reasons). And let's assume that this app is modified, which means I don't want Play Store to update/overwrite it. Even if you turn off auto-update in Play Store, I could still manually update it by accident. Let's call this app "App A". If I were to Hide apps in Amarok, i.e I'm now going to use Play Store, then it would look like this:
+  - App A (already hidden/disabled, so hiding in Amarok doesn't change anything)
+  - App B (will now be hidden/disabled)
+  - App C (will now be hidden/disabled)
+
+  All 3 apps will not show up in Play Store, no chance of accidentally updating them, great. Now, I'm done with using the Play Store, I can Unhide in Amarok. All 3 apps will now be unhidden (enabled). However, App A was previously disabled manually by me and I want to keep it that way. The original Amarok version cannot do this as of this writing. But with my version, you can restore the previous app enabled/disabled status.
+
+- Similar to point 2, you can configure on a per-app level to keep an app disabled (hidden) after you tap Unhide. This is great if you know that certain apps will always need to be hidden and that you want to manually enable/disable it. So for example, if I have an app that I rarely use (maybe once every month) and I just need to make sure it always stays disabled after I enable it temporarily with Amarok, then later on choose to manually enable it, then this is what you need.
+  
+   
+
+
 ## What is Amarok?
 
 Amarok is a lightweight Android privacy tool that shields your files and apps from prying eyes without the overhead of encryption.
